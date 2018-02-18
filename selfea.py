@@ -3,6 +3,28 @@ from copy import deepcopy
 
 train_selfea = pd.read_csv("train.csv",low_memory=False)
 
+def classify(clf,x_n_train, y_n_train, x_n_test,y_n_test,test, useall = False):
+    if useall:
+        clf.fit(x_n_train, y_n_train)
+        test_n = test.reindex(columns = x_n_train.columns)
+    else:
+        clf.fit(x_n_train, y_n_train)
+
+        y_pred = clf.predict(x_n_test)
+
+        cm = confusion_matrix(y_n_test, y_pred)
+        print (cm)
+
+        y_prob = clf.predict_proba(x_n_test)
+        print(metrics.roc_auc_score(y_n_test, y_prob[:,1]))
+
+        test_n = test.reindex(columns = x_n_test.columns)
+
+    y_pred_f1 = clf.predict(test_n)
+    y_prob = clf.predict_proba(test_n)
+    return y_prob
+
+
 class InitData():
     def __init__(self):
         print("start reading data")
@@ -30,8 +52,6 @@ class InitData():
         X_new = train_selfea[lst]
         Y_new = train_selfea.is_female
 
-
-
         self.processed_Xtr = X_new
         self.processed_Ytr = Y_new
         self.processed_test = test
@@ -51,7 +71,7 @@ class InitData():
 
     def get_labels(self):
         """Return the train.is_female"""
-        return deepcopy(train.is_female)
+        return deepcopy(train_selfea.is_female)
 
     def get_test(self, pro = False):
         """
