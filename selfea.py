@@ -1,11 +1,72 @@
 import pandas as pd
+from copy import deepcopy
+
+train_selfea = pd.read_csv("train.csv",low_memory=False)
+
+class InitData():
+    def __init__(self):
+        print("start reading data")
+        # train_selfea = pd.read_csv("train.csv",low_memory=False)
+        print("read train")
+        test = pd.read_csv("test.csv",low_memory=False)
+        print("read test")
+        # new_feature = pd.read_csv("new_feature.csv")
+        # new_feature = new_feature["Column Name"].tolist()
+
+        # lst = ['DL14','DG5_4','AA15','AA14','DG8a','AA7','DG4','GN2','DG1','MT10','GN3','GN5','MT2','GN4','DG3','FL4','DL1','DG6','DL0']
+        # lst = lst + new_feature
+
+        lst = ['DL14','DG5_4','AA15','AA14','DG8a','AA7','DG4','GN2','DG1','MT10','GN3','GN5','MT2','GN4','DG3','FL4','DL1','DG6','DL0']
+        add_feature = ['DG5_9','DL0', 'DL1', 'DL2_new', 'G2P1_11_new', 'DL4_22', "MT1A_m", "MT1A_f"]
+        add_feature2 = ["GN2_new","FF14_6_new","FF14_5_new","FF14_4_new","FF14_3_new","MT18_5_new","MT18_4_new","GN5"]
+        lst = lst + add_feature + add_feature2
+
+        self.train = train_selfea
+        self.test = test
+        self.features = lst
+
+        process_data(train_selfea)
+        process_data(test)
+        X_new = train_selfea[lst]
+        Y_new = train_selfea.is_female
 
 
-new_feature = pd.read_csv("new_feature.csv")
-new_feature = new_feature["Column Name"].tolist()
 
-lst = ['DL14','DG5_4','AA15','AA14','DG8a','AA7','DG4','GN2','DG1','MT10','GN3','GN5','MT2','GN4','DG3','FL4','DL1','DG6','DL0']
-lst = lst + new_feature
+        self.processed_Xtr = X_new
+        self.processed_Ytr = Y_new
+        self.processed_test = test
+        print("finished")
+
+
+    def get_train(self, pro = False):
+        """
+        if pro is default(False), return the original train data, the same as the
+        original csv file
+
+        if pro is true, return the processed train with only selected features
+        """
+        if pro:
+            return deepcopy(self.processed_Xtr)
+        return deepcopy(self.train)
+
+    def get_labels(self):
+        """Return the train.is_female"""
+        return deepcopy(train.is_female)
+
+    def get_test(self, pro = False):
+        """
+        if pro is default(False), return the original test data, the same as the
+        original csv file
+
+        if pro is true, return the processed test with only selected features
+        """
+        if pro:
+            return deepcopy(self.processed_test)
+        return deepcopy(self.test)
+
+    def get_features(self):
+        """Return a list of selected features, both human selected and random forest generated"""
+        return deepcopy(self.features)
 
 def process_DL2(df,pr = False):
     f = "DL2"
@@ -35,7 +96,7 @@ def process_MT17_6(df, pr = False):
             male.append(choice)
         if pr:
             print(perc)
-    
+
     df.loc[df.MT1A.isin(male), f +"_m"]=1
 #     df.loc[df.MT1A.isin(female), "MT1A_f"]=1
     df.MT17_6_m = df.MT17_6_m.fillna(0)
@@ -97,7 +158,7 @@ def process_G2P1_11(df,pr = False):
 
 def rate_feature(f,choice):
     # among people who chose choice in f, what percent is female
-    df=(train[["is_female",f]])
+    df=(train_selfea[["is_female",f]])
     # df[ :,lambda dh
     feature = df.loc[df[f] ==choice]
     a = list(feature["is_female"])
