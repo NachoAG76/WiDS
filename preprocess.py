@@ -1,3 +1,6 @@
+import numpy as np
+import pandas as pd
+
 def delete80na_col(train):
     over80 = []
     other = []
