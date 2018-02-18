@@ -21,7 +21,8 @@ def my_fillna(X):
 
 def preprocess(train, test):
     df_all = pd.concat([train,test])
-    category_cols = train.select_dtypes(exclude=[np.number]).columns.tolist()
+    category_cols = train.select_dtypes(exclude=[np.number]).columns.tolist() +
+    test.select_dtypes(exclude=[np.number]).columns.tolist() 
     for header in category_cols:
 #     df[header] = df[header].astype('category').cat.codes
 #     test[header] = test[header].astype('category').cat.codes
@@ -36,7 +37,10 @@ def preprocess(train, test):
 
     over80, other = delete80na_col(train)
     train_delete_over80 = train.drop(over80, axis = 1)
+    # test = test.reindex(columns = train_delete_over80.columns, fill_value = 0)
 
 
     my_fillna(train_delete_over80)
+    test = test.reindex(columns = train_delete_over80.columns, fill_value = 0)
+
     return train_delete_over80, test
