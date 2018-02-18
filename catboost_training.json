@@ -1,0 +1,6 @@
+{
+"meta":{"launch_mode":"Train","name":"experiment","iteration_count":2,"learn_metrics":["AUC\tmax","Logloss\tmin"],"test_sets":[],"test_metrics":[],"learn_sets":["learn"]},
+"iterations":[
+{"learn":[0.9344356188,0.6615110929],"iteration":0,"passed_time":0.6041563791,"remaining_time":0.6041563791},
+{"learn":[0.9345539862,0.6326391425],"iteration":1,"passed_time":1.190450028,"remaining_time":0}
+]}
