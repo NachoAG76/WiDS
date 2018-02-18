@@ -1,5 +1,6 @@
 import pandas as pd
 from copy import deepcopy
+import csv
 
 train_selfea = pd.read_csv("train.csv",low_memory=False)
 
@@ -192,3 +193,13 @@ def process_data(df):
     process_G2P1_11(df)
     process_GN2(df)
     process_cols(df)
+
+def write_file(fname,y_prob):
+    with open(fname,'w') as f:
+        fieldnames = ["test_id","is_female"]
+        wri = csv.DictWriter(f, delimiter=',',fieldnames= fieldnames)
+        acc = 0
+        wri.writeheader()
+        for i in y_prob:
+            wri.writerow({"test_id":acc, "is_female": i[1]})
+            acc = acc+1
