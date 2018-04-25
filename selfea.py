@@ -1,13 +1,17 @@
 import pandas as pd
 from copy import deepcopy
 import csv
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+
 
 train_selfea = pd.read_csv("train.csv",low_memory=False)
 
 def classify(clf,x_n_train, y_n_train, x_n_test,y_n_test,test, useall = False):
     if useall:
         clf.fit(x_n_train, y_n_train)
-        test_n = test.reindex(columns = x_n_train.columns)
+        # test_n = test.reindex(columns = x_n_train.columns)
+        test_n = test
     else:
         clf.fit(x_n_train, y_n_train)
 
